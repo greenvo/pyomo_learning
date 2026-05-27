@@ -156,6 +156,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+PyomoLearningEnv/
 
 # Spyder project settings
 .spyderproject
