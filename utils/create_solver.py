@@ -45,7 +45,7 @@ def pyomo_solver_creator(
     time_limit: int = 300,
     presolve: str = "on",
     scaling: str = "on"
-) -> pyo.CommonSolverInterface:
+    ):
     """
     Instantiates and configures a Pyomo solver object wrapper.
     1. Enforces strict input parameter verification before the solver binary runs.
