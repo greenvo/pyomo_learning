@@ -1,5 +1,5 @@
 import pyomo.environ as pyo
-from src.data_store.coeff import STAGE
+from src.datastore.coeff import STAGE
 
 def add_solution_extraction(model):
     if STAGE == 1:

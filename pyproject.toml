@@ -30,14 +30,8 @@ dependencies = [
 ]
 
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]
-packages = [{include = "compositional_lp", from = "src"}]
-
-
-[tool.poetry.group.dev.dependencies]
-# Development tools (not installed in production)
-ipykernel = ">=6.0"              # Jupyter kernel for notebooks
+[dependency-groups]
+dev = [
+    "ipykernel>=6.0"
+]
