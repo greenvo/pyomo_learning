@@ -4,6 +4,27 @@ This project is a highly modularized Pyomo optimization project. It dynamically 
 
 ## Architecture
 
+```mermaid
+graph TD
+    %% Main Execution
+    Main["src/utils/runner/main.py"] -->|"1. Instantiate"| Polytope["src/builder/polytope.py"]
+    Main -->|"2. Orchestrate"| Orch["src/builder/orchestrator.py"]
+    Main -->|"3. Configure Suffixes"| Suffix["src/utils/runner/solution_extractor.py"]
+    Main -->|"4. Solve LP"| Solver["src/utils/factory/solver_factory.py"]
+
+    %% Orchestrator dynamically discovers model components
+    Orch -->|"Walks & Imports"| Vars["src/variables/"]
+    Orch -->|"Walks & Imports"| Objs["src/objectives/"]
+    Orch -->|"Walks & Imports"| Cons["src/constraints/"]
+    
+    %% Store Dependencies
+    Vars -.->|"Reads Bounds"| DSBounds["src/datastore/var_bounds.py"]
+    Objs -.->|"Reads Coeffs"| DSCoeff["src/datastore/coeff.py"]
+    Cons -.->|"Reads Coeffs"| DSCoeff
+    Polytope -.->|"Reads STAGE"| DSCoeff
+    Orch -.->|"Reads STAGE"| DSCoeff
+```
+
 - `src/datastore/`: Contains coefficients and variable bounds.
 - `src/variables/`: Contains deeply nested scripts that define model variables.
 - `src/objectives/`: Contains scripts that store Objective expressions.
@@ -49,9 +70,3 @@ uv is used for package manegement
 - **Sync environment**: uv sync (creates/updates uv.lock and syncs .venv)
 - **Run scripts safely**: uv run python src/utils/runner/main.py
 
-### How to Maintain Dependencies
-- **Add a dependency**: uv add <package>
-- **Add a dev dependency**: uv add --dev <package>
-- **Remove a dependency**: uv remove <package>
-- **Sync environment**: uv sync (creates/updates uv.lock and syncs .venv)
-- **Run scripts safely**: uv run python src/utils/runner/main.py

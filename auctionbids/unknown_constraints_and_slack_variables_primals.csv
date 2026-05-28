@@ -1,0 +1,3 @@
+Constraint Name,Constraint Slack,Pi (marginal price),Basis
+add_c1_stage1_constraint,0.0,3.0,Non-Basic (Constraint is Binding)
+add_c2_stage1_constraint,0.0,1.0,Non-Basic (Constraint is Binding)

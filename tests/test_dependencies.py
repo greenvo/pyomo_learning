@@ -7,6 +7,10 @@ installed and importable within the Poetry virtual environment.
 
 import importlib
 import sys
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
 # ---------------------------------------------------------------------------
@@ -47,11 +51,11 @@ def check_library(package_name: str, import_name: str) -> dict:
 
 
 def run_checks() -> bool:
-    """Run all import checks and print a formatted report. Returns True if all pass."""
-    print("\n" + "=" * 60)
-    print("  Library Import Check")
-    print(f"  Python: {sys.version}")
-    print("=" * 60)
+    """Run all import checks and log a formatted report. Returns True if all pass."""
+    logger.info("\n" + "=" * 60)
+    logger.info("  Library Import Check")
+    logger.info(f"  Python: {sys.version}")
+    logger.info("=" * 60)
 
     col_w = {"package": 14, "status": 9, "version": 16}
     header = (
@@ -60,32 +64,32 @@ def run_checks() -> bool:
         f"{'Version':<{col_w['version']}}"
         f"Notes"
     )
-    print(header)
-    print("  " + "-" * 56)
+    logger.info(header)
+    logger.info("  " + "-" * 56)
 
     results = [check_library(pkg, imp) for pkg, imp in REQUIRED_LIBRARIES.items()]
 
     for r in results:
         status_icon = "[OK]" if r["status"] == "OK" else "[!!]"
         notes = r["error"] if r["error"] else ""
-        print(
+        logger.info(
             f"  {status_icon} {r['package']:<{col_w['package'] - 4}}"
             f"{r['status']:<{col_w['status']}}"
             f"{r['version']:<{col_w['version']}}"
             f"{notes}"
         )
 
-    print("=" * 60)
+    logger.info("=" * 60)
 
     failed = [r for r in results if r["status"] != "OK"]
     if not failed:
-        print(f"  [OK] All {len(results)} libraries imported successfully.\n")
+        logger.info(f"  [OK] All {len(results)} libraries imported successfully.\n")
         return True
     else:
-        print(f"  [!!] {len(failed)} library/libraries failed to import:")
+        logger.error(f"  [!!] {len(failed)} library/libraries failed to import:")
         for r in failed:
-            print(f"      - {r['package']}: {r['error']}")
-        print()
+            logger.error(f"      - {r['package']}: {r['error']}")
+        logger.info("")
         return False
 
 
