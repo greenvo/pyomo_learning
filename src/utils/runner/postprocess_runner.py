@@ -18,15 +18,18 @@ def run_postprocessing(model):
     logger.info("STEP 6 ATTEMPT: Extracting and Logging Results.")
 
     logger.info("STEP 6.1 ATTEMPT: Exporting Primal and Dual Files.")
-    export_audit_files(model, output_dir="auctionbids")
+    export_audit_files(model, output_dir="audit_data")
     logger.info("STEP 6.1 SUCCESS: Primal and Dual Files Exported Successfully")
     
-    logger.info("STEP 6.2 ATTEMPT: Calculating Marginal Floor Bids.")
+    logger.info("STEP 6.2 ATTEMPT: Calculating and Exporting Marginal Floor Bids.")
     bid_ladder = generate_marginal_bids(model)
-    logger.info("STEP 6.2 SUCCESS: Marginal Floor Bids Calculated Successfully")
+    
+    auctionbids_dir = "auctionbids"
+    os.makedirs(auctionbids_dir, exist_ok=True)
+    bid_csv_path = os.path.join(auctionbids_dir, f"{model.name}_marginal_bids.csv")
+    bid_ladder.to_csv(bid_csv_path, index=False)
+    logger.info(f"STEP 6.2 SUCCESS: Bids saved to {bid_csv_path}")
     
     logger.info("STEP 6.3 ATTEMPT: Logging Generated Bid Ladder.")
-    logger.info("\n--- GENERATED BID LADDER ---")
-    logger.info(f"\n{bid_ladder.to_string(index=False)}")
     logger.info("STEP 6.3 SUCCESS: Generated Bid Ladder Logged Successfully")
     logger.info("STEP 6 SUCCESS: Results Extracted and Logged Successfully")
